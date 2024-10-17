@@ -12,7 +12,31 @@ bot = Client("aviator_betting_bot", api_id=API_ID, api_hash=API_HASH, bot_token=
 
 bet_amount = 1000  # Fixed bet amount
 session_times = ["10:00", "11:00", "9:40"]  # Define session start times (You can customize this)
-channels_to_post = ["@anehow", "-1002454896752"]  # Add your channel IDs or usernames here
+channels_to_post = ["@anehow", "-1002454896752"]
+
+from PIL import Image, ImageDraw, ImageFont
+
+def add_text_to_image(image_path, multiplier, winnings):
+    # Open the image
+    image = Image.open(image_path)
+
+    # Define a font and size (use any appropriate font you want)
+    font = ImageFont.truetype("arial.ttf", 40)
+    draw = ImageDraw.Draw(image)
+
+    # Define text to add
+    multiplier_text = f"1.3x"
+    winnings_text = f"Win ₹{winnings}"
+
+    # Add multiplier and winnings text at the respective positions
+    draw.text((50, 50), multiplier_text, font=font, fill="white")  # Adjust the position as needed
+    draw.text((50, 150), winnings_text, font=font, fill="white")
+
+    # Save the modified image
+    edited_image_path = "/path/to/edited_image.jpg"  # Set the correct path
+    image.save(edited_image_path)
+
+    return edited_image_path# Add your channel IDs or usernames here
 
 # Function to generate a random multiplier result for the round
 def generate_round_result():
@@ -25,50 +49,39 @@ def calculate_winnings(bet, multiplier):
 # Function to run a betting session (5 rounds in each session)
 async def run_session(session_time):
     for channel in channels_to_post:
-        try:
-            await bot.send_message(channel, f"🚨 Session started at {session_time} 🚨\nPrepare for the first signal...")
-        except PeerIdInvalid:
-            print(f"Failed to send message. Invalid Peer ID: {channel}")
-            continue
+        # Announce session start
+        await bot.send_message(channel, f"🚨 Session started at {session_time} 🚨\nPrepare for the first signal...")
+        await asyncio.sleep(1)  
 
-    total_winnings = {channel: 0 for channel in channels_to_post}  # Keep track of winnings per channel
+        total_winnings = {channel: 0 for channel in channels_to_post}  
 
-    for round_number in range(1, 6):
-        multiplier = generate_round_result()
-        winnings = calculate_winnings(bet_amount, multiplier)
-        
+        for round_number in range(1, 6):
+            multiplier = generate_round_result()
+            winnings = calculate_winnings(bet_amount, multiplier)
+
+            for channel in channels_to_post:
+                total_winnings[channel] += winnings
+
+                await bot.send_message(channel, f"✈️ **Round {round_number} Signal**: Bet {multiplier}x")
+                await asyncio.sleep(1) 
+                
+                edited_image_path = add_text_to_image("/path/to/original_image.jpg", multiplier, winnings)
+                
+                await bot.send_photo(channel, photo=edited_image_path)
+
+            await asyncio.sleep(60) 
+
         for channel in channels_to_post:
-            total_winnings[channel] += winnings
-            
-            try:
-                # Post round result
-                await bot.send_message(
-                    channel,
-                    f"✈️ **Round {round_number} Signal**: \n🚀 Bet: ₹{bet_amount}\n🔥 Multiplier: {multiplier}x\n💰 Winnings: ₹{winnings}\nTotal so far: ₹{total_winnings[channel]}"
-                )
-            except PeerIdInvalid:
-                print(f"Failed to send round {round_number} message. Invalid Peer ID: {channel}")
-                continue
-        
-        await asyncio.sleep(5 * 60)  # Wait for 5 minutes between each round
-
-    # Post session summary
-    for channel in channels_to_post:
-        try:
             await bot.send_message(
                 channel,
                 f"📊 **Session Summary**: \nTotal winnings after 5 rounds: ₹{total_winnings[channel]}\nSession ended. 🚀"
             )
-        except PeerIdInvalid:
-            print(f"Failed to send session summary. Invalid Peer ID: {channel}")
-
-# Function to schedule sessions at specific times
 async def schedule_sessions():
     while True:
         now = datetime.now().strftime("%H:%M")
         if now in session_times:
             await run_session(now)
-        await asyncio.sleep(60)  # Check every minute if it's time for the next session
+        await asyncio.sleep(60)  
 
 @bot.on_message(filters.command("start") & filters.private)
 async def start(client, message):
