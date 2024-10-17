@@ -21,7 +21,7 @@ def edit_image(multiplier, winnings):
     img_path = 'rspg.jpg'  # Your image path
     img = Image.open(img_path)
     draw = ImageDraw.Draw(img)
-    font = ImageFont.truetype("font.ttf", 36)  # Adjust to your preferred font file
+    font = ImageFont.truetype("font.ttf", 25)  # Adjust to your preferred font file
 
     multiplier_pos = (230, 80)  
     winnings_pos = (550, 80)   
