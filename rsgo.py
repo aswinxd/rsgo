@@ -24,7 +24,7 @@ def edit_image(multiplier, winnings):
     font = ImageFont.truetype("font.ttf", 36)  # Adjust to your preferred font file
 
     multiplier_pos = (230, 70)  
-    winnings_pos = (680, 70)   
+    winnings_pos = (680, 80)   
     # Text content
     multiplier_text = f"{multiplier}x"
     winnings_text = f"₹{winnings}"
