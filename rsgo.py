@@ -5,9 +5,9 @@ import asyncio
 from PIL import Image, ImageDraw, ImageFont
 
 # Define your bot API
-API_ID = "your_api_id"
-API_HASH = "your_api_hash"
-BOT_TOKEN = "your_bot_token"
+API_ID = "7980140"
+API_HASH = "db84e318c6894f560a4087c20c33ce0a"
+BOT_TOKEN = "6520550784:AAHZPv8eOS2Unc91jIVYSH5PB0z8SO36lUY"
 
 # Create the bot
 bot = Client("aviator_forecast_bot", api_id=API_ID, api_hash=API_HASH, bot_token=BOT_TOKEN)
