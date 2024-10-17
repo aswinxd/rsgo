@@ -10,60 +10,67 @@ BOT_TOKEN = "6520550784:AAHZPv8eOS2Unc91jIVYSH5PB0z8SO36lUY"
 
 bot = Client("aviator_forecast_bot", api_id=API_ID, api_hash=API_HASH, bot_token=BOT_TOKEN)
 
+# List to store forecast history
 previous_results = []
 
-sync def fetch_forecast_image():
-    # Function to fetch or generate the image link (this should be updated according to your API or scraping method)
-    images = ["https://example.com/image1.png", "https://example.com/image2.png", "https://example.com/image3.png"]
-    return random.choice(images)
+# Generate a new forecast
+def generate_forecast():
+    if len(previous_results) > 2:
+        previous_results.pop(0)  # Keep only the last two forecasts
+    next_multiplier = round(random.uniform(1.0, 2.0), 2) 
+    previous_results.append(next_multiplier)
+    return next_multiplier
 
-async def post_forecast_message():
-    global forecast_history
+# Create an image with the forecast and previous results
+def create_forecast_image(forecast, previous_results):
+    img = Image.new('RGB', (600, 300), color=(73, 109, 137))
+    draw = ImageDraw.Draw(img)
 
-    # Simulate getting a new forecast (this part should fetch from an actual API or data source)
-    forecast_value = round(random.uniform(1.5, 3.0), 2)
-    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    # Load a font to display the text
+    font = ImageFont.truetype("font.ttf", 40) 
 
-    # Keep track of the current forecast
-    forecast_history.append({
-        'forecast': forecast_value,
-        'time': timestamp
-    })
+    # Display the next forecast and previous results
+    draw.text((50, 50), f"Next Forecast: {forecast}x", fill="white", font=font)
+    draw.text((50, 150), f"Previous: {previous_results}", fill="white", font=font)
 
-    # Only keep the last two forecasts for display
-    if len(forecast_history) > 2:
-        forecast_history = forecast_history[-2:]
+    # Save the image locally
+    img.save("forecast_image.png")
+    return "forecast_image.png"
 
-    # Previous forecast data
-    if len(forecast_history) > 1:
-        previous_forecast = forecast_history[-2]
-    else:
-        previous_forecast = {'forecast': "N/A", 'time': "N/A"}
-
-    # Fetch forecast image (this should connect to the appropriate image source)
-    forecast_image_url = await fetch_forecast_image()
-
-    # Format the message with next and previous forecasts
-    forecast_message = (
-        f"📊 **Next Forecast: {forecast_value}x**\n"
-        f"🕒 **Previous Forecast: {previous_forecast['forecast']}x**\n"
-        f"⏰ **Time: {timestamp}**\n\n"
-        f"![Forecast Image]({forecast_image_url})\n"
-        "💡 *Get ready for the next prediction!*"
-    )
-
-    # Post the message to the target channel
-    await bot.send_message("your_channel_id", forecast_message)
-
-# Command to start the forecasting process
-@bot.on_message(filters.command("start_forecast"))
-async def start_forecast(client: Client, message: Message):
-    await message.reply("Starting forecast updates...")
-
-    # Post forecasts every minute for demonstration (adjust this timing as needed)
+# Automatically post the forecast to the group or channel at regular intervals
+async def auto_post_forecast():
     while True:
-        await post_forecast_message()
-        await asyncio.sleep(60)  # Post every 60 seconds (modify as needed)
+        # Generate a new forecast and create an image
+        forecast = generate_forecast()
+        image_path = create_forecast_image(forecast, previous_results)
+        
+        # Send the image and forecast as a message
+        await bot.send_photo(chat_id="@your_channel_or_group_id", photo=image_path, caption=f"✈️ BET ✈️\n💥 Next forecast multiplier: {forecast}x\n🕒 Previous: {previous_results}")
 
+        # Wait 60 seconds before posting the next forecast
+        await asyncio.sleep(60) 
+
+# Command for users to manually request a forecast
+@bot.on_message(filters.command("forecast") & filters.private)
+async def send_forecast(client, message):
+    # Generate a new forecast and create an image
+    forecast = generate_forecast()
+    image_path = create_forecast_image(forecast, previous_results)
+    
+    # Send the forecast image as a reply to the user
+    await message.reply_photo(photo=image_path, caption=f"✈️ BET ✈️\n💥 Next forecast multiplier: {forecast}x\n🕒 Previous: {previous_results}")
+
+# Start command to welcome users
+@bot.on_message(filters.command("start") & filters.private)
+async def start(client, message):
+    await message.reply("Welcome to the Aviator Forecast Bot! Use /forecast to get the next forecast.")
+
+# Function to initiate the bot and the auto-posting feature
+async def start_forecast_posting():
+    await bot.start()
+    asyncio.create_task(auto_post_forecast())  # Start the auto-posting in a separate task
+    await idle()  # Keep the bot running
+
+# Entry point to run the bot
 if __name__ == "__main__":
-    bot.run()
+    bot.run(start_forecast_posting())
