@@ -94,7 +94,7 @@ async def start(client, message):
 async def start_bot():
     await bot.start()
     asyncio.create_task(run_session("Test Session"))
-    await run_session("Test Session")
+  #  await run_session("Test Session")
    # asyncio.create_task(schedule_sessions())  # Schedule the betting sessions
 #    await idle()
 
