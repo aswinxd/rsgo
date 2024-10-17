@@ -89,11 +89,12 @@ async def schedule_sessions():
 
 @bot.on_message(filters.command("start") & filters.private)
 async def start(client, message):
-    await message.reply("Welcome to the Aviator Betting Bot! Sessions will be conducted at scheduled times in both public and private channels.\nFixed bet amount: ₹1000.")
+    await message.reply("Welcome")
 
 async def start_bot():
     await bot.start()
-    asyncio.create_task(run_session("Test Session"))
+    asyncio.create_task(run_session())  # No arguments
+    await idle()
   #  await run_session("Test Session")
    # asyncio.create_task(schedule_sessions())  # Schedule the betting sessions
 #    await idle()
