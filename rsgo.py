@@ -31,7 +31,7 @@ def create_forecast_image(forecast, previous_results):
     draw = ImageDraw.Draw(img)
 
     # Load a font
-    font = ImageFont.truetype("arial.ttf", 40)  # Make sure to have a font file or specify its path
+    font = ImageFont.truetype("font.ttf", 40)  # Make sure to have a font file or specify its path
 
     # Add text to the image (current and previous results)
     draw.text((50, 50), f"Next Forecast: {forecast}x", fill="white", font=font)
