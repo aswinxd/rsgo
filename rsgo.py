@@ -23,10 +23,8 @@ def edit_image(multiplier, winnings):
     draw = ImageDraw.Draw(img)
     font = ImageFont.truetype("font.ttf", 36)  # Adjust to your preferred font file
 
-    # Coordinates for text placement (adjust these values as per your image layout)
-    multiplier_pos = (240, 30)  # Multiplier on the first rectangle
-    winnings_pos = (240, 140)   # Winnings on the second rectangle
-    
+    multiplier_position = (230, 70)  
+    winnings_position = (680, 70)   
     # Text content
     multiplier_text = f"{multiplier}x"
     winnings_text = f"₹{winnings}"
