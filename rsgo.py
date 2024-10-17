@@ -12,7 +12,7 @@ bot = Client("aviator_betting_bot", api_id=API_ID, api_hash=API_HASH, bot_token=
 
 bet_amount = 1000  # Fixed bet amount
 session_times = ["10:00", "11:00", "9:40"]  # Define session start times (You can customize this)
-channels_to_post = ["-1002454896752", "-1002454896752"]  # Add your channel IDs or usernames here
+channels_to_post = ["@anehow", "-1002454896752"]  # Add your channel IDs or usernames here
 
 # Function to generate a random multiplier result for the round
 def generate_round_result():
