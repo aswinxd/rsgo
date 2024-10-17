@@ -50,35 +50,36 @@ def calculate_winnings(bet, multiplier):
     return round(bet * multiplier, 2)
 
 # Function to run a betting session (5 rounds in each session)
-async def run_session(session_time):
+async def run_session():
     for channel in channels_to_post:
-        # Announce session start
-        await bot.send_message(channel, f"🚨 Session started at {session_time} 🚨\nPrepare for the first signal...")
-        await asyncio.sleep(1)  
+        # Send session start message
+        await bot.send_message(channel, "✅ **Session started!**")
 
-        total_winnings = {channel: 0 for channel in channels_to_post}  
+        await asyncio.sleep(1)
 
-        for round_number in range(1, 6):
-            multiplier = generate_round_result()
-            winnings = calculate_winnings(bet_amount, multiplier)
+        # Simulate bet and result posting
+        multiplier = 1.6  # Example multiplier
+        winnings = bet_amount * multiplier
 
-            for channel in channels_to_post:
-                total_winnings[channel] += winnings
+        await bot.send_message(channel, f"🚀 Bet: **{multiplier}x**")
 
-                await bot.send_message(channel, f"✈️ **Round {round_number} Signal**: Bet {multiplier}x")
-                await asyncio.sleep(1) 
-                
-                edited_image_path = add_text_to_image("rspg.jpg", multiplier, winnings)
-                
-                await bot.send_photo(channel, photo=edited_image_path)
+        await asyncio.sleep(2)
 
-            await asyncio.sleep(60) 
+        # Edit the image with bet info and post it
+        edited_image = edit_image(multiplier, winnings)
+        await bot.send_photo(channel, edited_image)
 
-        for channel in channels_to_post:
-            await bot.send_message(
-                channel,
-                f"📊 **Session Summary**: \nTotal winnings after 5 rounds: ₹{total_winnings[channel]}\nSession ended. 🚀"
-            )
+        # Delay for next round (60 seconds for example)
+        await asyncio.sleep(round_intervals)
+
+    # After all rounds, post session summary
+    for channel in channels_to_post:
+        # Example of a session summary with custom URL button
+        markup = InlineKeyboardMarkup(
+            [[InlineKeyboardButton("📊 Check Stats", url="https://example.com")]]
+        )
+        await bot.send_message(channel,  f"📊 **Session Summary**: \nTotal winnings after 5 rounds: ₹{total_winnings[channel]}\nSession ended.", reply_markup=markup)
+
 async def schedule_sessions():
     while True:
         now = datetime.now().strftime("%H:%M")
