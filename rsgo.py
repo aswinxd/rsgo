@@ -43,7 +43,7 @@ async def auto_post_forecast():
         image_path = create_forecast_image(forecast, previous_results, win_amount)
 
         # Post the image and message
-        await bot.send_photo(chat_id="@your_channel_or_group_id", 
+        await bot.send_photo(chat_id="-1002454896752", 
                              photo=image_path, 
                              caption=f"✈️ BET ✈️\n💥 Next forecast: {forecast}x\n\nYou have cashed out 💰\nWin: ₹{win_amount}\n\n[Register](https://your-website-link)", 
                              parse_mode="Markdown")
