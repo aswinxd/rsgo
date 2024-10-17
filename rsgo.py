@@ -3,69 +3,114 @@ import random
 import time
 import asyncio
 from PIL import Image, ImageDraw, ImageFont
+from pyrogram import Client, filters
+import asyncio
+from datetime import datetime, timedelta
+import random
 
-API_ID = "7980140"
-API_HASH = "db84e318c6894f560a4087c20c33ce0a"
-BOT_TOKEN = "6520550784:AAHZPv8eOS2Unc91jIVYSH5PB0z8SO36lUY"
+# Define session settings
+SESSION_INTERVAL = 60 * 60  # Sessions are every hour (3600 seconds)
+ROUNDS_PER_SESSION = 5
+ROUND_INTERVAL = 300  # 5 minutes between each round
+BET_AMOUNT = 1000  # Fixed bet amount for each round
 
-bot = Client("aviator_forecast_bot", api_id=API_ID, api_hash=API_HASH, bot_token=BOT_TOKEN)
+# Store ongoing sessions and results
+sessions = {}
+results = {}
 
-previous_results = []
+# Initialize the bot (Replace with your API details)
+api_id = '7980140'
+api_hash = 'db84e318c6894f560a4087c20c33ce0a'
+bot_token = '6520550784:AAHZPv8eOS2Unc91jIVYSH5PB0z8SO36lUY'
 
-def generate_forecast():
-    if len(previous_results) > 2:
-        previous_results.pop(0)
-    next_multiplier = round(random.uniform(1.0, 2.0), 2)  # You can adjust the range as needed
-    previous_results.append(next_multiplier)
-    return next_multiplier
+bot = Client("betting_bot", api_id=api_id, api_hash=api_hash, bot_token=bot_token)
 
-def create_forecast_image(forecast, previous_results, win_amount):
-    # Create an image with the forecast data, like in the screenshot
-    img = Image.new('RGB', (600, 300), color=(0, 0, 0))  # Black background
-    draw = ImageDraw.Draw(img)
+async def generate_result():
+    """Generate a random result for each round."""
+    return round(random.uniform(1.5, 3.0), 2)
 
-    # Load a custom font
-    font = ImageFont.truetype("font.ttf", 40)
+async def run_round(session_id, channel_id):
+    """Run a single round of betting."""
+    round_result = await generate_result()
+    win_amount = round(BET_AMOUNT * round_result, 2)
+    result_msg = f"✈️ BET ✈️\nMultiplier: {round_result}x\n\n💰 Win: ₹{win_amount} 💰"
+    
+    # Post result to the channel
+    await bot.send_message(chat_id=channel_id, text=result_msg)
+    return win_amount
 
-    # Add the bet details and previous results, similar to the screenshot
-    draw.text((50, 50), f"✈️ BET ✈️", fill="white", font=font)
-    draw.text((50, 120), f"💥 Next forecast: {forecast}x", fill="white", font=font)
-    draw.text((50, 190), f"You have cashed out 💰\nWin: ₹{win_amount}", fill="green", font=font)
+async def run_session(channel_id):
+    """Conducts a full session with multiple rounds."""
+    session_id = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    sessions[channel_id] = session_id
+    session_winnings = 0
 
-    img.save("forecast_image.png")
+    for round_num in range(1, ROUNDS_PER_SESSION + 1):
+        await bot.send_message(chat_id=channel_id, text=f"🚨 PREPARE FOR SIGNAL {round_num} 🚨")
+        await asyncio.sleep(2)  # Simulate a small delay before the round starts
+        round_win = await run_round(session_id, channel_id)
+        session_winnings += round_win
+        await asyncio.sleep(ROUND_INTERVAL)  # Wait before the next round
 
-    return "forecast_image.png"
+    # Post session summary
+    summary_msg = f"🏆 Session Summary 🏆\nTotal Winnings: ₹{session_winnings}\n\n{ROUNDS_PER_SESSION} Rounds Completed."
+    await bot.send_message(chat_id=channel_id, text=summary_msg)
 
-async def auto_post_forecast():
+async def scheduler():
+    """Continuously run sessions at set intervals."""
     while True:
-        forecast = generate_forecast()
-        win_amount = round(random.uniform(1000, 3000), 2)  # You can adjust the range as needed
-        image_path = create_forecast_image(forecast, previous_results, win_amount)
-
-        # Post the image and message
-        await bot.send_photo(chat_id="-1002454896752", 
-                             photo=image_path, 
-                             caption=f"✈️ BET ✈️\n💥 Next forecast: {forecast}x\n\nYou have cashed out 💰\nWin: ₹{win_amount}\n\n[Register](https://your-website-link)", 
-                             parse_mode="Markdown")
-
-        await asyncio.sleep(60)  # Adjust the posting interval
-
-@bot.on_message(filters.command("forecast") & filters.private)
-async def send_forecast(client, message):
-    forecast = generate_forecast()
-    win_amount = round(random.uniform(1000, 3000), 2)  # Random win amount for demonstration
-    image_path = create_forecast_image(forecast, previous_results, win_amount)
-
-    await message.reply_photo(photo=image_path, caption=f"✈️ BET ✈️\n💥 Next forecast: {forecast}x\n\nYou have cashed out 💰\nWin: ₹{win_amount}")
+        now = datetime.now()
+        next_session_time = (now + timedelta(seconds=SESSION_INTERVAL)).strftime('%H:%M:%S')
+        for channel_id in sessions.keys():
+            await bot.send_message(chat_id=channel_id, text=f"⏳ Next session will start at {next_session_time}")
+            await asyncio.sleep(SESSION_INTERVAL)
+            await run_session(channel_id)
 
 @bot.on_message(filters.command("start") & filters.private)
 async def start(client, message):
-    await message.reply("Welcome to the Aviator Forecast Bot! Use /forecast to get the next forecast.")
+    await message.reply("Welcome to the Aviator Bot!\nUse /set_channel to configure a channel for sessions.")
 
-async def start_forecast_posting():
-    await bot.start()
-    asyncio.create_task(auto_post_forecast())
-    await idle()
+@bot.on_message(filters.command("set_channel") & filters.private)
+async def set_channel(client, message):
+    """Allows the user to set a channel where the bot will post."""
+    try:
+        channel_id = int(message.text.split()[1])
+        sessions[channel_id] = None  # No session yet
+        await message.reply(f"Channel ID {channel_id} set! Sessions will be conducted here.")
+    except (IndexError, ValueError):
+        await message.reply("Invalid format! Use: /set_channel <channel_id>.")
+
+@bot.on_message(filters.command("start_session") & filters.private)
+async def start_session(client, message):
+    """Manually start a betting session."""
+    try:
+        channel_id = int(message.text.split()[1])
+        if channel_id not in sessions:
+            await message.reply("Channel not set! Use /set_channel first.")
+            return
+        await message.reply("Starting session...")
+        await run_session(channel_id)
+    except (IndexError, ValueError):
+        await message.reply("Invalid format! Use: /start_session <channel_id>.")
+
+@bot.on_message(filters.command("status") & filters.private)
+async def status(client, message):
+    """Check the status of sessions."""
+    status_msg = "Current Active Sessions:\n"
+    for channel_id, session_id in sessions.items():
+        if session_id:
+            status_msg += f"Channel {channel_id}: Session {session_id} ongoing.\n"
+        else:
+            status_msg += f"Channel {channel_id}: No session running.\n"
+    await message.reply(status_msg)
+
+@bot.on_message(filters.command("stop_session") & filters.private)
+async def stop_session(client, message):
+    """Stop all active sessions."""
+    sessions.clear()
+    await message.reply("All sessions stopped.")
 
 if __name__ == "__main__":
-    bot.run(start_forecast_posting())
+    # Start the scheduler and bot
+    asyncio.get_event_loop().create_task(scheduler())
+    bot.run()
