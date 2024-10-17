@@ -1,116 +1,71 @@
 from pyrogram import Client, filters, idle
 import random
-import time
 import asyncio
-from PIL import Image, ImageDraw, ImageFont
-from pyrogram import Client, filters
-import asyncio
-from datetime import datetime, timedelta
-import random
+from datetime import datetime
 
-# Define session settings
-SESSION_INTERVAL = 60 * 60  # Sessions are every hour (3600 seconds)
-ROUNDS_PER_SESSION = 5
-ROUND_INTERVAL = 300  # 5 minutes between each round
-BET_AMOUNT = 1000  # Fixed bet amount for each round
+API_ID = "7980140"  # Your API ID
+API_HASH = "db84e318c6894f560a4087c20c33ce0a"  # Your API Hash
+BOT_TOKEN = "6520550784:AAHZPv8eOS2Unc91jIVYSH5PB0z8SO36lUY"  # Your bot token
 
-# Store ongoing sessions and results
-sessions = {}
-results = {}
+bot = Client("aviator_betting_bot", api_id=API_ID, api_hash=API_HASH, bot_token=BOT_TOKEN)
 
-# Initialize the bot (Replace with your API details)
-api_id = '7980140'
-api_hash = 'db84e318c6894f560a4087c20c33ce0a'
-bot_token = '6520550784:AAHZPv8eOS2Unc91jIVYSH5PB0z8SO36lUY'
+bet_amount = 1000  # Fixed bet amount
+session_times = ["10:00", "11:00", "9:40"]  # Define session start times (You can customize this)
+channels_to_post = ["-1002454896752", "-1002454896752"]  # Add your channel IDs or usernames here
 
-bot = Client("betting_bot", api_id=api_id, api_hash=api_hash, bot_token=bot_token)
+# Function to generate a random multiplier result for the round
+def generate_round_result():
+    return round(random.uniform(1.0, 3.0), 2)  # Generate random multiplier between 1.0x and 3.0x
 
-async def generate_result():
-    """Generate a random result for each round."""
-    return round(random.uniform(1.5, 3.0), 2)
+# Function to calculate winnings based on the bet and multiplier
+def calculate_winnings(bet, multiplier):
+    return round(bet * multiplier, 2)
 
-async def run_round(session_id, channel_id):
-    """Run a single round of betting."""
-    round_result = await generate_result()
-    win_amount = round(BET_AMOUNT * round_result, 2)
-    result_msg = f"✈️ BET ✈️\nMultiplier: {round_result}x\n\n💰 Win: ₹{win_amount} 💰"
-    
-    # Post result to the channel
-    await bot.send_message(chat_id=channel_id, text=result_msg)
-    return win_amount
+# Function to run a betting session (5 rounds in each session)
+async def run_session(session_time):
+    for channel in channels_to_post:
+        await bot.send_message(channel, f"🚨 Session started at {session_time} 🚨\nPrepare for the first signal...")
 
-async def run_session(channel_id):
-    """Conducts a full session with multiple rounds."""
-    session_id = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    sessions[channel_id] = session_id
-    session_winnings = 0
+    total_winnings = {channel: 0 for channel in channels_to_post}  # Keep track of winnings per channel
 
-    for round_num in range(1, ROUNDS_PER_SESSION + 1):
-        await bot.send_message(chat_id=channel_id, text=f"🚨 PREPARE FOR SIGNAL {round_num} 🚨")
-        await asyncio.sleep(2)  # Simulate a small delay before the round starts
-        round_win = await run_round(session_id, channel_id)
-        session_winnings += round_win
-        await asyncio.sleep(ROUND_INTERVAL)  # Wait before the next round
+    for round_number in range(1, 6):
+        multiplier = generate_round_result()
+        winnings = calculate_winnings(bet_amount, multiplier)
+        
+        for channel in channels_to_post:
+            total_winnings[channel] += winnings
+            
+            # Post round result
+            await bot.send_message(
+                channel,
+                f"✈️ **Round {round_number} Signal**: \n🚀 Bet: ₹{bet_amount}\n🔥 Multiplier: {multiplier}x\n💰 Winnings: ₹{winnings}\nTotal so far: ₹{total_winnings[channel]}"
+            )
+        
+        await asyncio.sleep(5 * 60)  # Wait for 5 minutes between each round
 
     # Post session summary
-    summary_msg = f"🏆 Session Summary 🏆\nTotal Winnings: ₹{session_winnings}\n\n{ROUNDS_PER_SESSION} Rounds Completed."
-    await bot.send_message(chat_id=channel_id, text=summary_msg)
+    for channel in channels_to_post:
+        await bot.send_message(
+            channel,
+            f"📊 **Session Summary**: \nTotal winnings after 5 rounds: ₹{total_winnings[channel]}\nSession ended. 🚀"
+        )
 
-async def scheduler():
-    """Continuously run sessions at set intervals."""
+# Function to schedule sessions at specific times
+async def schedule_sessions():
     while True:
-        now = datetime.now()
-        next_session_time = (now + timedelta(seconds=SESSION_INTERVAL)).strftime('%H:%M:%S')
-        for channel_id in sessions.keys():
-            await bot.send_message(chat_id=channel_id, text=f"⏳ Next session will start at {next_session_time}")
-            await asyncio.sleep(SESSION_INTERVAL)
-            await run_session(channel_id)
+        now = datetime.now().strftime("%H:%M")
+        if now in session_times:
+            await run_session(now)
+        await asyncio.sleep(60)  # Check every minute if it's time for the next session
 
 @bot.on_message(filters.command("start") & filters.private)
 async def start(client, message):
-    await message.reply("Welcome to the Aviator Bot!\nUse /set_channel to configure a channel for sessions.")
+    await message.reply("Welcome to the Aviator Betting Bot! Sessions will be conducted at scheduled times in both public and private channels.\nFixed bet amount: ₹1000.")
 
-@bot.on_message(filters.command("set_channel") & filters.private)
-async def set_channel(client, message):
-    """Allows the user to set a channel where the bot will post."""
-    try:
-        channel_id = int(message.text.split()[1])
-        sessions[channel_id] = None  # No session yet
-        await message.reply(f"Channel ID {channel_id} set! Sessions will be conducted here.")
-    except (IndexError, ValueError):
-        await message.reply("Invalid format! Use: /set_channel <channel_id>.")
-
-@bot.on_message(filters.command("start_session") & filters.private)
-async def start_session(client, message):
-    """Manually start a betting session."""
-    try:
-        channel_id = int(message.text.split()[1])
-        if channel_id not in sessions:
-            await message.reply("Channel not set! Use /set_channel first.")
-            return
-        await message.reply("Starting session...")
-        await run_session(channel_id)
-    except (IndexError, ValueError):
-        await message.reply("Invalid format! Use: /start_session <channel_id>.")
-
-@bot.on_message(filters.command("status") & filters.private)
-async def status(client, message):
-    """Check the status of sessions."""
-    status_msg = "Current Active Sessions:\n"
-    for channel_id, session_id in sessions.items():
-        if session_id:
-            status_msg += f"Channel {channel_id}: Session {session_id} ongoing.\n"
-        else:
-            status_msg += f"Channel {channel_id}: No session running.\n"
-    await message.reply(status_msg)
-
-@bot.on_message(filters.command("stop_session") & filters.private)
-async def stop_session(client, message):
-    """Stop all active sessions."""
-    sessions.clear()
-    await message.reply("All sessions stopped.")
+async def start_bot():
+    await bot.start()
+    asyncio.create_task(schedule_sessions())  # Schedule the betting sessions
+    await idle()
 
 if __name__ == "__main__":
-    # Start the scheduler and bot
-    asyncio.get_event_loop().create_task(scheduler())
-    bot.run()
+    bot.run(start_bot())
