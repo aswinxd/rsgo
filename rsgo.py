@@ -16,27 +16,30 @@ channels_to_post = ["@anehow", "-1002454896752"]
 
 from PIL import Image, ImageDraw, ImageFont
 
-def add_text_to_image(image_path, multiplier, winnings):
-    # Open the image
-    image = Image.open(image_path)
+# Function to edit image and place bet info
+def edit_image(multiplier, winnings):
+    img_path = 'rsgo.jpg'  # Your image path
+    img = Image.open(img_path)
+    draw = ImageDraw.Draw(img)
+    font = ImageFont.truetype("font.ttf", 36)  # Adjust to your preferred font file
 
-    # Define a font and size (use any appropriate font you want)
-    font = ImageFont.truetype("font.ttf", 40)
-    draw = ImageDraw.Draw(image)
+    # Coordinates for text placement (adjust these values as per your image layout)
+    multiplier_pos = (240, 30)  # Multiplier on the first rectangle
+    winnings_pos = (240, 140)   # Winnings on the second rectangle
+    
+    # Text content
+    multiplier_text = f"{multiplier}x"
+    winnings_text = f"₹{winnings}"
 
-    # Define text to add
-    multiplier_text = f"1.3x"
-    winnings_text = f"Win ₹{winnings}"
+    # Add text to image in the appropriate positions
+    draw.text(multiplier_pos, multiplier_text, font=font, fill="white")
+    draw.text(winnings_pos, winnings_text, font=font, fill="white")
 
-    # Add multiplier and winnings text at the respective positions
-    draw.text((50, 50), multiplier_text, font=font, fill="white")  # Adjust the position as needed
-    draw.text((50, 150), winnings_text, font=font, fill="white")
-
-    # Save the modified image
-    edited_image_path = "rspg.jpg"  # Set the correct path
-    image.save(edited_image_path)
-
-    return edited_image_path# Add your channel IDs or usernames here
+    # Save the new image with bet information
+    edited_image_path = "rsgo.jpg"
+    img.save(edited_image_path)
+    
+    return edited_image_path
 
 # Function to generate a random multiplier result for the round
 def generate_round_result():
