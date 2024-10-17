@@ -21,7 +21,7 @@ def add_text_to_image(image_path, multiplier, winnings):
     image = Image.open(image_path)
 
     # Define a font and size (use any appropriate font you want)
-    font = ImageFont.truetype("arial.ttf", 40)
+    font = ImageFont.truetype("font.ttf", 40)
     draw = ImageDraw.Draw(image)
 
     # Define text to add
