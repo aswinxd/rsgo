@@ -2,6 +2,7 @@ from pyrogram import Client, filters, idle
 import random
 import asyncio
 from datetime import datetime
+from pyrogram.errors import PeerIdInvalid
 
 API_ID = "7980140"  # Your API ID
 API_HASH = "db84e318c6894f560a4087c20c33ce0a"  # Your API Hash
@@ -24,7 +25,11 @@ def calculate_winnings(bet, multiplier):
 # Function to run a betting session (5 rounds in each session)
 async def run_session(session_time):
     for channel in channels_to_post:
-        await bot.send_message(channel, f"🚨 Session started at {session_time} 🚨\nPrepare for the first signal...")
+        try:
+            await bot.send_message(channel, f"🚨 Session started at {session_time} 🚨\nPrepare for the first signal...")
+        except PeerIdInvalid:
+            print(f"Failed to send message. Invalid Peer ID: {channel}")
+            continue
 
     total_winnings = {channel: 0 for channel in channels_to_post}  # Keep track of winnings per channel
 
@@ -35,20 +40,27 @@ async def run_session(session_time):
         for channel in channels_to_post:
             total_winnings[channel] += winnings
             
-            # Post round result
-            await bot.send_message(
-                channel,
-                f"✈️ **Round {round_number} Signal**: \n🚀 Bet: ₹{bet_amount}\n🔥 Multiplier: {multiplier}x\n💰 Winnings: ₹{winnings}\nTotal so far: ₹{total_winnings[channel]}"
-            )
+            try:
+                # Post round result
+                await bot.send_message(
+                    channel,
+                    f"✈️ **Round {round_number} Signal**: \n🚀 Bet: ₹{bet_amount}\n🔥 Multiplier: {multiplier}x\n💰 Winnings: ₹{winnings}\nTotal so far: ₹{total_winnings[channel]}"
+                )
+            except PeerIdInvalid:
+                print(f"Failed to send round {round_number} message. Invalid Peer ID: {channel}")
+                continue
         
         await asyncio.sleep(5 * 60)  # Wait for 5 minutes between each round
 
     # Post session summary
     for channel in channels_to_post:
-        await bot.send_message(
-            channel,
-            f"📊 **Session Summary**: \nTotal winnings after 5 rounds: ₹{total_winnings[channel]}\nSession ended. 🚀"
-        )
+        try:
+            await bot.send_message(
+                channel,
+                f"📊 **Session Summary**: \nTotal winnings after 5 rounds: ₹{total_winnings[channel]}\nSession ended. 🚀"
+            )
+        except PeerIdInvalid:
+            print(f"Failed to send session summary. Invalid Peer ID: {channel}")
 
 # Function to schedule sessions at specific times
 async def schedule_sessions():
@@ -64,9 +76,8 @@ async def start(client, message):
 
 async def start_bot():
     await bot.start()
-   # asyncio.create_task(schedule_sessions())  # Schedule the betting sessions
-    #await idle()
-    await run_session("Test Session")
+    asyncio.create_task(schedule_sessions())  # Schedule the betting sessions
+    await idle()
 
 if __name__ == "__main__":
     bot.run(start_bot())
