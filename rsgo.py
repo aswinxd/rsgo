@@ -33,7 +33,7 @@ def add_text_to_image(image_path, multiplier, winnings):
     draw.text((50, 150), winnings_text, font=font, fill="white")
 
     # Save the modified image
-    edited_image_path = "/path/to/edited_image.jpg"  # Set the correct path
+    edited_image_path = "rspg.jpg"  # Set the correct path
     image.save(edited_image_path)
 
     return edited_image_path# Add your channel IDs or usernames here
@@ -65,7 +65,7 @@ async def run_session(session_time):
                 await bot.send_message(channel, f"✈️ **Round {round_number} Signal**: Bet {multiplier}x")
                 await asyncio.sleep(1) 
                 
-                edited_image_path = add_text_to_image("/path/to/original_image.jpg", multiplier, winnings)
+                edited_image_path = add_text_to_image("rspg.jpg", multiplier, winnings)
                 
                 await bot.send_photo(channel, photo=edited_image_path)
 
