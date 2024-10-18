@@ -19,7 +19,7 @@ def edit_image(multiplier, winnings):
     img_path = 'rsgo.jpg'  
     img = Image.open(img_path)
     draw = ImageDraw.Draw(img)
-    font = ImageFont.truetype("font.ttf", 35)  
+    font = ImageFont.truetype("font.ttf", 40)  
     multiplier_pos = (230, 86)  
     winnings_pos = (490, 86)  
     draw.text(multiplier_pos, f"{multiplier}x", font=font, fill="white")
@@ -61,9 +61,9 @@ async def run_session():
 async def schedule_sessions():
     while True:
         now = datetime.now().strftime("%H:%M")
-        print(f"Current Time: {now}") 
+        #print(f"Current Time: {now}") 
         if now in session_times:
-            print(f"Starting session at {now}")  
+          #  print(f"Starting session at {now}")  
             await run_session()
         await asyncio.sleep(10)
 
