@@ -23,7 +23,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 # Function to edit image and place bet info
 def edit_image(multiplier, winnings):
-    img_path = 'rspg.jpg'  # Your image path
+    img_path = 'rsgo.jpg'  # Your image path
     img = Image.open(img_path)
     draw = ImageDraw.Draw(img)
 
