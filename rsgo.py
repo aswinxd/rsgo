@@ -99,7 +99,7 @@ async def start(client, message):
 # Start the bot and run the session scheduler
 async def start_bot():
     await bot.start()
-    asyncio.create_task(schedule_sessions())  # Start scheduling the betting sessions
+    asyncio.create_task(run_session())  # Start scheduling the betting sessions
     await idle()  # Keep the bot running
 
 if __name__ == "__main__":
