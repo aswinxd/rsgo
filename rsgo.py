@@ -21,7 +21,7 @@ def edit_image(multiplier, winnings):
     draw = ImageDraw.Draw(img)
     font = ImageFont.truetype("font.ttf", 40)  
     multiplier_pos = (230, 86)  
-    winnings_pos = (490, 86)  
+    winnings_pos = (480, 86)  
     draw.text(multiplier_pos, f"{multiplier}x", font=font, fill="white")
     draw.text(winnings_pos, f"₹{winnings}", font=font, fill="white")
     edited_image_path = "rspg_edited.jpg"
