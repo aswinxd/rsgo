@@ -12,7 +12,7 @@ BOT_TOKEN = "6520550784:AAHZPv8eOS2Unc91jIVYSH5PB0z8SO36lUY"
 bot = Client("aviator_betting_bot", api_id=API_ID, api_hash=API_HASH, bot_token=BOT_TOKEN)
 
 bet_amount = 1000 
-session_times = ["10:00", "11:00", "14:18"] #railwaytime
+session_times = ["10:00", "11:00", "14:22"] #railwaytime
 channels_to_post = ["@anehow", "-1002454896752"] 
 round_intervals = 60  
 def edit_image(multiplier, winnings):
@@ -61,9 +61,11 @@ async def run_session():
 async def schedule_sessions():
     while True:
         now = datetime.now().strftime("%H:%M")
+        print(f"Current Time: {now}") 
         if now in session_times:
+            print(f"Starting session at {now}")  
             await run_session()
-        await asyncio.sleep(20)  
+        await asyncio.sleep(10)
 
 @bot.on_message(filters.command("start") & filters.private)
 async def start(client, message):
