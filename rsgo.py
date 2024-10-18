@@ -38,7 +38,6 @@ async def run_session():
     total_winnings = {} 
     for channel in channels_to_post:
         total_winnings[channel] = 0
-        await bot.send_message("-1002454896752", "Test message from bot.")
         await bot.send_message(channel, "✅ **Session started starting round 1 soon**")
         await asyncio.sleep(1)
         for round_num in range(1, 6):
