@@ -23,10 +23,10 @@ def edit_image(multiplier, winnings):
     img_path = 'rsgo.jpg'  # Your image path
     img = Image.open(img_path)
     draw = ImageDraw.Draw(img)
-    font = ImageFont.truetype("font.ttf", 25)  # Adjust to your preferred font file
+    font = ImageFont.truetype("font.ttf", 30)  # Adjust to your preferred font file
 
-    multiplier_pos = (230, 80)  # Customize position as needed
-    winnings_pos = (530, 80)  # Customize position as needed
+    multiplier_pos = (230, 81)  # Customize position as needed
+    winnings_pos = (525, 81)  # Customize position as needed
 
     # Add text to image
     draw.text(multiplier_pos, f"{multiplier}x", font=font, fill="white")
