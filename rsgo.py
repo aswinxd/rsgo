@@ -67,9 +67,13 @@ async def schedule_sessions():
             await run_session()
         await asyncio.sleep(10)
 
-@bot.on_message(filters.command("start") & filters.private)
+@bot.on_message(filters.command("start"))
 async def start(client, message):
-    await message.reply("Welcome")
+    if message.chat.type == "private":
+        await message.reply("Welcome.")
+    else:
+        await message.reply("Welcome.")
+        
 async def start_bot():
     await bot.start()
     asyncio.create_task(run_session()) 
