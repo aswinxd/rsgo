@@ -5,20 +5,16 @@ from datetime import datetime
 from pyrogram.errors import PeerIdInvalid
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from PIL import Image, ImageDraw, ImageFont
-
+#MDB =
 API_ID = "7980140"  
 API_HASH = "db84e318c6894f560a4087c20c33ce0a"  
 BOT_TOKEN = "6520550784:AAHZPv8eOS2Unc91jIVYSH5PB0z8SO36lUY"  
-
 bot = Client("aviator_betting_bot", api_id=API_ID, api_hash=API_HASH, bot_token=BOT_TOKEN)
 
 bet_amount = 1000 
 session_times = ["10:00", "11:00", "9:40"] 
 channels_to_post = ["@anehow", "-1002454896752"] 
-
 round_intervals = 60  
-
-
 def edit_image(multiplier, winnings):
     img_path = 'rsgo.jpg'  
     img = Image.open(img_path)
