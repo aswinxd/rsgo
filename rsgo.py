@@ -82,6 +82,7 @@ async def run_session():
 
             # Delay for the next round
             await asyncio.sleep(round_intervals)
+            await bot.send_message(channel, f"📊 **Session Summary**: \nTotal winnings after 5 rounds: ₹{total_winnings[channel]}\nSession ended.", reply_markup=markup)
 
     # After all rounds, post session summary
     for channel in channels_to_post:
