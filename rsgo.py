@@ -64,7 +64,7 @@ async def run_session():
             multiplier = generate_round_result()
             winnings = calculate_winnings(bet_amount, multiplier)
 
-            await bot.send_message{channel, f"/n🚀 Bet: **{multiplier}x**"
+            await bot.send_message(channel, f"/n🚀 Bet: **{multiplier}x**")
             await asyncio.sleep(2)
 
             # Add winnings to total
