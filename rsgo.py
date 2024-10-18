@@ -63,7 +63,7 @@ async def schedule_sessions():
         now = datetime.now().strftime("%H:%M")
         if now in session_times:
             await run_session()
-        await asyncio.sleep(60)  
+        await asyncio.sleep(20)  
 
 @bot.on_message(filters.command("start") & filters.private)
 async def start(client, message):
