@@ -39,14 +39,14 @@ async def run_session():
     for channel in channels_to_post:
         total_winnings[channel] = 0
         await bot.send_message(channel, "✅ **Session started starting round 1 soon**")
-        await asyncio.sleep(1)
+        await asyncio.sleep(15)
         for round_num in range(1, 6):
             await bot.send_message(channel, f"🚀 **Hold up! Starting round {round_num}...**")
-            await asyncio.sleep(2)
+            await asyncio.sleep(10)
             multiplier = generate_round_result()
             winnings = calculate_winnings(bet_amount, multiplier)
             await bot.send_message(channel, f"🚀 Bet: **{multiplier}x**")
-            await asyncio.sleep(2)
+            await asyncio.sleep(30)
             total_winnings[channel] += winnings
             edited_image = edit_image(multiplier, winnings)
             caption = f"Round {round_num} 🚀\nMultiplier: **{multiplier}x**\nWinnings: ₹{winnings}"
@@ -56,7 +56,7 @@ async def run_session():
             await bot.send_photo(channel, edited_image, caption=caption, reply_markup=markup)
             await asyncio.sleep(round_intervals)
 
-        await bot.send_message(  # <-- Updated Line
+        await bot.send_message(  
             channel,
             f"📊 **Session Summary**: \nTotal winnings after 5 rounds: ₹{total_winnings[channel]}\nSession ended.",
             reply_markup=markup
