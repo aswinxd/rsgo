@@ -57,20 +57,26 @@ async def run_session():
         await asyncio.sleep(1)
 
         # Simulate 5 rounds of bets
-        for _ in range(5):
+        for round_num in range(1, 6):
+            # Announce round start
+            await bot.send_message(channel, f"🚀 **Hold up! Starting round {round_num}...**")
+            await asyncio.sleep(2)
+
             multiplier = generate_round_result()
             winnings = calculate_winnings(bet_amount, multiplier)
 
             # Add winnings to total
             total_winnings[channel] += winnings
 
-            # Post round info to channel
-            await bot.send_message(channel, f"🚀 Bet: **{multiplier}x** | Win: ₹{winnings}")
-            await asyncio.sleep(2)
-
-            # Edit the image with bet info and post it
+            # Edit the image with bet info
             edited_image = edit_image(multiplier, winnings)
-            await bot.send_photo(channel, edited_image)
+
+            # Post round info with caption and button
+            caption = f"Round {round_num} 🚀\nMultiplier: **{multiplier}x**\nWinnings: ₹{winnings}"
+            markup = InlineKeyboardMarkup(
+                [[InlineKeyboardButton("📊 Check Stats", url="https://example.com")]]
+            )
+            await bot.send_photo(channel, edited_image, caption=caption, reply_markup=markup)
 
             # Delay for the next round
             await asyncio.sleep(round_intervals)
