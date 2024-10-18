@@ -19,25 +19,37 @@ channels_to_post = ["@anehow", "-1002454896752"]  # Channels to post the message
 round_intervals = 60  # Time between rounds in seconds
 
 # Function to edit image and place bet info
+from PIL import Image, ImageDraw, ImageFont
+
+# Function to edit image and place bet info
 def edit_image(multiplier, winnings):
     img_path = 'rspg.jpg'  # Your image path
     img = Image.open(img_path)
     draw = ImageDraw.Draw(img)
-    font = ImageFont.truetype("font.ttf", 25)  # Adjust to your preferred font file
 
-    multiplier_pos = (230, 80)  # Customize position as needed
-    winnings_pos = (550, 80)  # Customize position as needed
+    # Load font (Ensure that the font file is correctly located)
+    font = ImageFont.truetype("font.ttf", 25)  # Adjust font size accordingly
 
-    # Add text to image
-    draw.text(multiplier_pos, f"{multiplier}x", font=font, fill="white")
-    draw.text(winnings_pos, f"₹{winnings}", font=font, fill="white")
+    # Define text positions (Adjust these values to avoid overlap)
+    multiplier_pos = (230, 80)  # x, y position for multiplier text
+    winnings_pos = (550, 80)    # x, y position for winnings text
 
-    # Save the new image with bet information
-    edited_image_path = "rspg_edited.jpg"
+    # Text content
+    multiplier_text = f"{multiplier}x"
+    winnings_text = f"₹{winnings}"
+
+    # Clear any existing drawing in the area (Optional)
+    # You can fill a rectangle with the background color before drawing new text to avoid overlap
+    
+    # Draw the text on the image
+    draw.text(multiplier_pos, multiplier_text, font=font, fill="white")
+    draw.text(winnings_pos, winnings_text, font=font, fill="white")
+
+    # Save the edited image
+    edited_image_path = "edited_rspg.jpg"
     img.save(edited_image_path)
     
     return edited_image_path
-
 # Function to generate a random multiplier result for the round
 def generate_round_result():
     return round(random.uniform(1.0, 3.0), 2)  # Generate random multiplier between 1.0x and 3.0x
