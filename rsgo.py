@@ -81,7 +81,7 @@ async def start(client, message):
         
 async def start_bot():
     await bot.start()
-    asyncio.create_task(run_session()) 
+    asyncio.create_task(schedule_sessions()) 
     await idle()  
 
 if __name__ == "__main__":
