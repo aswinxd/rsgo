@@ -64,7 +64,7 @@ async def run_session():
             multiplier = generate_round_result()
             winnings = calculate_winnings(bet_amount, multiplier)
 
-            await bot.send_message(channel, f"/n🚀 Bet: **{multiplier}x**")
+            await bot.send_message(channel, f"🚀 Bet: **{multiplier}x**")
             await asyncio.sleep(2)
 
             # Add winnings to total
@@ -76,7 +76,7 @@ async def run_session():
             # Post round info with caption and button
             caption = f"Round {round_num} 🚀\nMultiplier: **{multiplier}x**\nWinnings: ₹{winnings}"
             markup = InlineKeyboardMarkup(
-                [[InlineKeyboardButton("📊 Check Stats", url="https://example.com")]]
+                [[InlineKeyboardButton("📊 Check Stats", url="https://rsgo.win")]]
             )
             await bot.send_photo(channel, edited_image, caption=caption, reply_markup=markup)
 
@@ -87,7 +87,7 @@ async def run_session():
     for channel in channels_to_post:
         # Example of a session summary with a custom URL button
         markup = InlineKeyboardMarkup(
-            [[InlineKeyboardButton("📊 Check Stats", url="https://example.com")]]
+            [[InlineKeyboardButton("📊 Check Stats", url="https://rsgo.win")]]
         )
         await bot.send_message(channel, f"📊 **Session Summary**: \nTotal winnings after 5 rounds: ₹{total_winnings[channel]}\nSession ended.", reply_markup=markup)
 
