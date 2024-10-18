@@ -55,16 +55,17 @@ async def run_session():
         # Send session start message
         await bot.send_message(channel, "✅ **Session started starting round 1 soon**")
         await asyncio.sleep(1)
-        multiplier = generate_round_result()
-
         # Simulate 5 rounds of bets
         for round_num in range(1, 6):
             # Announce round start
-            await bot.send_message(channel, f"🚀 **Hold up! Starting round {round_num}...** /n🚀 Bet: **{multiplier}x**")
+            await bot.send_message(channel, f"🚀 **Hold up! Starting round {round_num}...**")
             await asyncio.sleep(2)
 
             multiplier = generate_round_result()
             winnings = calculate_winnings(bet_amount, multiplier)
+
+            await bot.send_message{channel, f"/n🚀 Bet: **{multiplier}x**"
+            await asyncio.sleep(2)
 
             # Add winnings to total
             total_winnings[channel] += winnings
