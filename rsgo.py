@@ -26,7 +26,7 @@ def edit_image(multiplier, winnings):
     font = ImageFont.truetype("font.ttf", 25)  # Adjust to your preferred font file
 
     multiplier_pos = (230, 80)  # Customize position as needed
-    winnings_pos = (550, 80)  # Customize position as needed
+    winnings_pos = (530, 80)  # Customize position as needed
 
     # Add text to image
     draw.text(multiplier_pos, f"{multiplier}x", font=font, fill="white")
