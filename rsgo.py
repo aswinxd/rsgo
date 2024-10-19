@@ -97,12 +97,10 @@ async def run_session():
 
 
     
-       ''' final_message = (
-            f" **Session Summary**: \n"
-            f"Total winnings after 5 rounds: ₹{total_winnings[channel]}\n"
-            f"Session ended."
-        )
-        await bot.send_photo(channel, final_summary_image, caption=final_message, reply_markup=markup)'''
+   #    ''' final_message = (
+        #    f" **Session Summary**: \n"
+     #       f"Total winnings after 5 rounds: ₹{total_winnings[channel]}\n"
+   ###      await bot.send_photo(channel, final_summary_image, caption=final_message, reply_markup=markup)'''
 
 
 '''async def run_session():
