@@ -67,11 +67,11 @@ def edit_final_summary_image(total_winnings, round_results):
     final_message_text = "FINAL PROFITS FROM THIS SESSION"
     draw.text((50, 650), final_message_text, font=font, fill="white")
     timestamp = int(time.time())  
-    edited_image_path = f"summary_edited_{timestamp}.jpg"
+    edit_image_path = f"summary_edited.jpg"
 
-    img.save(edited_image_path)
+    img.save(edit_image_path)
     
-    return edited_image_path
+    return edit_image_path
 
 
 async def run_session():
