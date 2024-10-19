@@ -162,7 +162,7 @@ async def schedule_sessions():
         now = datetime.now().strftime("%H:%M")
         print(f"Current Time: {now}") 
         if now in session_times:
-        print(f"Starting session at {now}")  
+            print(f"Starting session at {now}")  
             await run_session()
         await asyncio.sleep(10)
 
