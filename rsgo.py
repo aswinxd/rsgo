@@ -34,7 +34,57 @@ def generate_round_result():
 def calculate_winnings(bet, multiplier):
     return round(bet * multiplier, 2)
 
+def edit_final_summary_image(total_winnings, round_results):
+    img_path = 'summary_template.jpg'  # Path to your base image
+    img = Image.open(img_path)
+    draw = ImageDraw.Draw(img)
+    font = ImageFont.truetype("font.ttf", 40)
+    
+    summary_pos = (50, 50)  # Adjust these positions based on your image template
+    winnings_pos = (50, 500)
+    summary_text = "\n".join(round_results)
+    total_text = f"Total winnings: ₹{total_winnings}"
+
+    draw.text(summary_pos, summary_text, font=font, fill="black")
+    draw.text(winnings_pos, total_text, font=font, fill="black")
+
+    edited_image_path = "summary.jpg"
+    img.save(edited_image_path)
+    return edited_image_path
+
 async def run_session():
+    total_winnings = {}
+    round_results = {}
+    for channel in channels_to_post:
+        total_winnings[channel] = 0
+        round_results[channel] = []
+
+        await bot.send_message(channel, "✅ **Session starting round 1 soon**")
+        await asyncio.sleep(15)
+        for round_num in range(1, 6):
+            await bot.send_message(channel, f" **Hold up! Starting round {round_num}...**")
+            await asyncio.sleep(10)
+            multiplier = generate_round_result()
+            winnings = calculate_winnings(bet_amount, multiplier)
+            total_winnings[channel] += winnings
+            round_results[channel].append(f"✅**Round {round_num}  ₹{winnings}**")
+            await bot.send_message(channel, f" Bet: **{multiplier}x**")
+            await asyncio.sleep(30)
+            edited_image = edit_image(multiplier, winnings)
+            caption = f"Round {round_num} \nMultiplier: **{multiplier}x**\nWinnings: ₹{winnings}"
+            markup = InlineKeyboardMarkup([[InlineKeyboardButton(" Check Stats", url="https://rsgo.win")]])
+            await bot.send_photo(channel, edited_image, caption=caption, reply_markup=markup)
+            await asyncio.sleep(round_intervals)
+
+        final_summary_image = edit_final_summary_image(total_winnings[channel], round_results[channel])
+        final_message = (
+            f" **Session Summary**: \n"
+            f"Total winnings after 5 rounds: ₹{total_winnings[channel]}\n"
+            f"Session ended."
+        )
+        await bot.send_photo(channel, final_summary_image, caption=final_message, reply_markup=markup)
+
+'''async def run_session():
     total_winnings = {} 
     round_results = {}  
 
@@ -71,7 +121,7 @@ async def run_session():
             f"Total winnings after 5 rounds: ₹{total_winnings[channel]}\n"
             f"Session ended."
         )
-        await bot.send_message(channel, final_message, reply_markup=markup)
+        await bot.send_message(channel, final_message, reply_markup=markup)'''
 
          
 async def schedule_sessions():
