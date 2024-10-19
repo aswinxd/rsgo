@@ -35,12 +35,12 @@ def calculate_winnings(bet, multiplier):
     return round(bet * multiplier, 2)
 
 def edit_final_summary_image(total_winnings, round_results):
-    img_path = 'summary_template.jpg'  # Path to your base image
+    img_path = 'summary.jpg'  
     img = Image.open(img_path)
     draw = ImageDraw.Draw(img)
     font = ImageFont.truetype("font.ttf", 40)
     
-    summary_pos = (50, 50)  # Adjust these positions based on your image template
+    summary_pos = (50, 50)
     winnings_pos = (50, 500)
     summary_text = "\n".join(round_results)
     total_text = f"Total winnings: ₹{total_winnings}"
