@@ -46,8 +46,8 @@ def edit_final_summary_image(total_winnings, round_results):
     smaller_font = ImageFont.truetype("font.ttf", 30)
 
     # Positioning coordinates
-    summary_pos = (50, 50)  
-    final_profits_pos = (50, 500)
+    summary_pos = (80, 80)  
+    final_profits_pos = (50, 300)
     rounds_start_pos = 80  
     round_spacing = 25  
 
