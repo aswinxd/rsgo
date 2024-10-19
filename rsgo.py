@@ -34,21 +34,36 @@ def generate_round_result():
 def calculate_winnings(bet, multiplier):
     return round(bet * multiplier, 2)
 
+# Use this library at the top if not already included
+from PIL import Image, ImageDraw, ImageFont
+
+
 def edit_final_summary_image(total_winnings, round_results):
-    img_path = 'summary.jpg'  
+    img_path = 'summary.jpg' 
     img = Image.open(img_path)
     draw = ImageDraw.Draw(img)
-    font = ImageFont.truetype("font.ttf", 32)
-    
-    summary_pos = (50, 50)
-    winnings_pos = (50, 500)
-    summary_text = "\n".join(round_results)
-    total_text = f"Total winnings: ₹{total_winnings}"
+    font = ImageFont.truetype("font.ttf", 40)
+    smaller_font = ImageFont.truetype("font.ttf", 30)
 
-    draw.text(summary_pos, summary_text, font=font, fill="white")
-    draw.text(winnings_pos, total_text, font=font, fill="white")
+    summary_pos = (50, 50)  
+    final_profits_pos = (50, 500)
+    rounds_start_pos = 150  
+    round_spacing = 50  
 
-    edited_image_path = "summary.jpg"
+    draw.text((50, 10), "Aviator Signal Reports", font=font, fill="white")
+
+    total_winnings_text = f"Total Profits: ₹{total_winnings}"
+    draw.text(final_profits_pos, total_winnings_text, font=font, fill="white")
+
+    for i, result in enumerate(round_results):
+        round_text = f"Round {i + 1}: {result.split()[1]}"
+        draw.text((50, rounds_start_pos + i * round_spacing), round_text, font=smaller_font, fill="white")
+
+    final_message_text = "FINAL PROFITS FROM THIS SESSION"
+    draw.text((50, 650), final_message_text, font=font, fill="white")
+
+    timestamp = int(time.time())  
+    edited_image_path = f"summary_edited_{timestamp}.jpg"
     img.save(edited_image_path)
     return edited_image_path
 
@@ -60,16 +75,16 @@ async def run_session():
         round_results[channel] = []
 
         await bot.send_message(channel, "✅ **Session starting round 1 soon**")
-        await asyncio.sleep(1)
+        await asyncio.sleep(15)
         for round_num in range(1, 6):
             await bot.send_message(channel, f" **Hold up! Starting round {round_num}...**")
-            await asyncio.sleep(1)
+            await asyncio.sleep(10)
             multiplier = generate_round_result()
             winnings = calculate_winnings(bet_amount, multiplier)
             total_winnings[channel] += winnings
-            round_results[channel].append(f"✅**Round {round_num}  ₹{winnings}**")
+            round_results[channel].append(f"Round {round_num}  ₹{winnings}")
             await bot.send_message(channel, f" Bet: **{multiplier}x**")
-            await asyncio.sleep(1)
+            await asyncio.sleep(30)
             edited_image = edit_image(multiplier, winnings)
             caption = f"Round {round_num} \nMultiplier: **{multiplier}x**\nWinnings: ₹{winnings}"
             markup = InlineKeyboardMarkup([[InlineKeyboardButton(" Check Stats", url="https://rsgo.win")]])
@@ -83,6 +98,7 @@ async def run_session():
             f"Session ended."
         )
         await bot.send_photo(channel, final_summary_image, caption=final_message, reply_markup=markup)
+
 
 '''async def run_session():
     total_winnings = {} 
