@@ -14,7 +14,7 @@ bot = Client("aviator_betting_bot", api_id=API_ID, api_hash=API_HASH, bot_token=
 
 bet_amount = 1000 
 session_times = ["09:00", "11:00", "13:50", "15:00", "17:00", "19:00", "21:00", "23:00"] #international
-channels_to_post = ["@HowToDownIoadLink"] 
+channels_to_post = ["-1002396190461"] 
 round_intervals = 60  
 def edit_image(multiplier, winnings):
     img_path = 'rsgo.jpg'  
