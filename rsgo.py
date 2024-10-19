@@ -46,9 +46,9 @@ def edit_final_summary_image(total_winnings, round_results):
     smaller_font = ImageFont.truetype("font.ttf", 30)
 
     # Positioning coordinates
-    summary_pos = (100, 100)  
-    final_profits_pos = (80, 200)
-    rounds_start_pos = 100  
+    summary_pos = (80, 80)  
+    final_profits_pos = 50, 200)
+    rounds_start_pos = 80  
     round_spacing = 25  
 
     # Title of the image
@@ -61,7 +61,7 @@ def edit_final_summary_image(total_winnings, round_results):
     # Display the round results
     for i, result in enumerate(round_results):
         round_text = result  # Display the actual round result text
-        draw.text((50, rounds_start_pos + i * round_spacing), round_text, font=smaller_font, fill="white")
+        draw.text((80, rounds_start_pos + i * round_spacing), round_text, font=smaller_font, fill="white")
 
    
     final_message_text = "FINAL PROFITS FROM THIS SESSION"
