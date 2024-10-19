@@ -42,13 +42,13 @@ def edit_final_summary_image(total_winnings, round_results):
     img_path = 'summary.jpg'  # Base image for the summary
     img = Image.open(img_path)
     draw = ImageDraw.Draw(img)
-    font = ImageFont.truetype("font.ttf", 40)
-    smaller_font = ImageFont.truetype("font.ttf", 30)
+    font = ImageFont.truetype("font.ttf", 30)
+    smaller_font = ImageFont.truetype("font.ttf", 20)
 
     # Positioning coordinates
-    summary_pos = (40, 40)  
+    summary_pos = (80, 80)  
     final_profits_pos = (30, 220)
-    rounds_start_pos = 40  
+    rounds_start_pos = 80  
     round_spacing = 25  
 
     # Title of the image
