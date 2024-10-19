@@ -47,7 +47,7 @@ def edit_final_summary_image(total_winnings, round_results):
 
     # Positioning coordinates
     summary_pos = (80, 80)  
-    final_profits_pos = 50, 200)
+    final_profits_pos = (50, 200)
     rounds_start_pos = 80  
     round_spacing = 25  
 
