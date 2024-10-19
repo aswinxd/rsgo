@@ -39,35 +39,40 @@ def calculate_winnings(bet, multiplier):
 from PIL import Image, ImageDraw, ImageFont
  
 def edit_final_summary_image(total_winnings, round_results):
-    total_winnings = {}
-    round_results = {}
-    img_path = 'summary.jpg' 
+    img_path = 'summary.jpg'  # Base image for the summary
     img = Image.open(img_path)
     draw = ImageDraw.Draw(img)
     font = ImageFont.truetype("font.ttf", 40)
     smaller_font = ImageFont.truetype("font.ttf", 30)
 
+    # Positioning coordinates
     summary_pos = (50, 50)  
     final_profits_pos = (50, 500)
     rounds_start_pos = 150  
     round_spacing = 50  
 
+    # Title of the image
     draw.text((50, 10), "Aviator Signal Reports", font=font, fill="white")
 
+    # Total winnings
     total_winnings_text = f"Total Profits: ₹{total_winnings}"
     draw.text(final_profits_pos, total_winnings_text, font=font, fill="white")
 
+    # Display the round results
     for i, result in enumerate(round_results):
-        round_text = f"round (round_results[channel])"
+        round_text = result  # Display the actual round result text
         draw.text((50, rounds_start_pos + i * round_spacing), round_text, font=smaller_font, fill="white")
 
+   
     final_message_text = "FINAL PROFITS FROM THIS SESSION"
     draw.text((50, 650), final_message_text, font=font, fill="white")
-
     timestamp = int(time.time())  
-    edited_image_path = f"summary_edited.jpg"
+    edited_image_path = f"summary_edited_{timestamp}.jpg"
+
     img.save(edited_image_path)
+    
     return edited_image_path
+
 
 async def run_session():
     total_winnings = {}
@@ -94,8 +99,8 @@ async def run_session():
             await asyncio.sleep(round_intervals)
 
           
-        final_summary = "\n".join(round_results[channel])
         final_summary_image = edit_final_summary_image(total_winnings[channel], round_results[channel])
+        final_summary = "\n".join(round_results[channel])
         final_message = (
             f"📊 **Session Summary**: \n"
             f"{final_summary}\n"
