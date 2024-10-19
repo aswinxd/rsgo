@@ -75,16 +75,16 @@ async def run_session():
         round_results[channel] = []
 
         await bot.send_message(channel, "✅ **Session starting round 1 soon**")
-        await asyncio.sleep(15)
+        await asyncio.sleep(1)
         for round_num in range(1, 6):
             await bot.send_message(channel, f" **Hold up! Starting round {round_num}...**")
-            await asyncio.sleep(10)
+            await asyncio.sleep(1)
             multiplier = generate_round_result()
             winnings = calculate_winnings(bet_amount, multiplier)
             total_winnings[channel] += winnings
             round_results[channel].append(f"Round {round_num}  ₹{winnings}")
             await bot.send_message(channel, f" Bet: **{multiplier}x**")
-            await asyncio.sleep(30)
+            await asyncio.sleep(3)
             edited_image = edit_image(multiplier, winnings)
             caption = f"Round {round_num} \nMultiplier: **{multiplier}x**\nWinnings: ₹{winnings}"
             markup = InlineKeyboardMarkup([[InlineKeyboardButton(" Check Stats", url="https://rsgo.win")]])
