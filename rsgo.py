@@ -93,6 +93,12 @@ async def run_session():
             await asyncio.sleep(round_intervals)
 
         final_summary_image = edit_final_summary_image(total_winnings[channel], round_results[channel])
+        final_message = (
+            f"📊 **Session Summary**: \n"
+            f"{final_summary}\n"
+            f"Total winnings after 5 rounds: ₹{total_winnings[channel]}\n"
+            f"Session ended."
+        )
         await bot.send_photo(channel, final_summary_image, caption=final_message, reply_markup=markup)
 
 
