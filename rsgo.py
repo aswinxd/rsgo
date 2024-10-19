@@ -47,7 +47,7 @@ def edit_final_summary_image(total_winnings, round_results):
 
     # Positioning coordinates
     summary_pos = (80, 80)  
-    final_profits_pos = (50, 300)
+    final_profits_pos = (80, 300)
     rounds_start_pos = 80  
     round_spacing = 25  
 
@@ -65,7 +65,7 @@ def edit_final_summary_image(total_winnings, round_results):
 
    
     final_message_text = "FINAL PROFITS FROM THIS SESSION"
-    draw.text((50, 650), final_message_text, font=font, fill="white")
+    draw.text((50, 350), final_message_text, font=font, fill="white")
     timestamp = int(time.time())  
     edit_image_path = f"summary_edited.jpg"
 
