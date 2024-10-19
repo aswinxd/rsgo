@@ -42,12 +42,12 @@ def edit_final_summary_image(total_winnings, round_results):
     img_path = 'summary.jpg'  # Base image for the summary
     img = Image.open(img_path)
     draw = ImageDraw.Draw(img)
-    font = ImageFont.truetype("font.ttf", 30)
-    smaller_font = ImageFont.truetype("font.ttf", 20)
+    font = ImageFont.truetype("font.ttf", 40)
+    smaller_font = ImageFont.truetype("font.ttf", 30)
 
     # Positioning coordinates
     summary_pos = (80, 80)  
-    final_profits_pos = (30, 220)
+    final_profits_pos = (30, 320)
     rounds_start_pos = 80  
     round_spacing = 25  
 
@@ -64,8 +64,8 @@ def edit_final_summary_image(total_winnings, round_results):
         draw.text((100, rounds_start_pos + i * round_spacing), round_text, font=smaller_font, fill="white")
 
    
-    final_message_text = "FINAL PROFITS FROM THIS SESSION"
-    draw.text((40, 350), final_message_text, font=font, fill="white")
+    final_message_text = f"FINAL PROFITS FROM THIS SESSION ₹{total_winnings}"
+    draw.text((40, 250), final_message_text, font=font, fill="white")
     timestamp = int(time.time())  
     edit_image_path = f"summary_edited.jpg"
 
