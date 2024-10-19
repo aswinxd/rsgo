@@ -47,7 +47,7 @@ def edit_final_summary_image(total_winnings, round_results):
 
     # Positioning coordinates
     summary_pos = (80, 80)  
-    final_profits_pos = (80, 300)
+    final_profits_pos = (80, 100)
     rounds_start_pos = 80  
     round_spacing = 25  
 
@@ -89,7 +89,7 @@ async def run_session():
             multiplier = generate_round_result()
             winnings = calculate_winnings(bet_amount, multiplier)
             total_winnings[channel] += winnings
-            round_results[channel].append(f"Round {round_num}  ₹{winnings}")
+            round_results[channel].append(f"Round {round_num} - Bet: **{multiplier}x ")
             await bot.send_message(channel, f" Bet: **{multiplier}x**")
             await asyncio.sleep(3)
             edited_image = edit_image(multiplier, winnings)
