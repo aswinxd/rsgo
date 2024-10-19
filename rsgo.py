@@ -5,6 +5,7 @@ from datetime import datetime
 from pyrogram.errors import PeerIdInvalid
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from PIL import Image, ImageDraw, ImageFont
+import time
 #MDB =
 API_ID = "7980140"  
 API_HASH = "db84e318c6894f560a4087c20c33ce0a"  
