@@ -48,8 +48,8 @@ def edit_final_summary_image(total_winnings, round_results):
     # Positioning coordinates
     summary_pos = (50, 50)  
     final_profits_pos = (50, 500)
-    rounds_start_pos = 50  
-    round_spacing = 15  
+    rounds_start_pos = 80  
+    round_spacing = 25  
 
     # Title of the image
     draw.text((50, 10), "Aviator Signal Reports", font=font, fill="white")
