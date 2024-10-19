@@ -37,10 +37,10 @@ def calculate_winnings(bet, multiplier):
 
 # Use this library at the top if not already included
 from PIL import Image, ImageDraw, ImageFont
- total_winnings = {}
- round_results = {}
-
+ 
 def edit_final_summary_image(total_winnings, round_results):
+    total_winnings = {}
+    round_results = {}
     img_path = 'summary.jpg' 
     img = Image.open(img_path)
     draw = ImageDraw.Draw(img)
