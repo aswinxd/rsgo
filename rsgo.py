@@ -65,7 +65,7 @@ def edit_final_summary_image(total_winnings, round_results):
 
    
     final_message_text = f"FINAL PROFITS FROM THIS SESSION ₹{total_winnings}"
-    draw.text((40, 200), final_message_text, font=font, fill="white")
+    draw.text((20, 250), final_message_text, font=font, fill="white")
     timestamp = int(time.time())  
     edit_image_path = f"summary_edited.jpg"
 
