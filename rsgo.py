@@ -46,9 +46,9 @@ def edit_final_summary_image(total_winnings, round_results):
     smaller_font = ImageFont.truetype("font.ttf", 30)
 
     # Positioning coordinates
-    summary_pos = (80, 80)  
+    summary_pos = (40, 40)  
     final_profits_pos = (30, 220)
-    rounds_start_pos = 80  
+    rounds_start_pos = 40  
     round_spacing = 25  
 
     # Title of the image
@@ -65,7 +65,7 @@ def edit_final_summary_image(total_winnings, round_results):
 
    
     final_message_text = "FINAL PROFITS FROM THIS SESSION"
-    draw.text((50, 350), final_message_text, font=font, fill="white")
+    draw.text((40, 350), final_message_text, font=font, fill="white")
     timestamp = int(time.time())  
     edit_image_path = f"summary_edited.jpg"
 
