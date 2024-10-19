@@ -13,7 +13,7 @@ BOT_TOKEN = "6520550784:AAHZPv8eOS2Unc91jIVYSH5PB0z8SO36lUY"
 bot = Client("aviator_betting_bot", api_id=API_ID, api_hash=API_HASH, bot_token=BOT_TOKEN)
 
 bet_amount = 1000 
-session_times = ["09:00", "11:00", "13:00", "15:00", "17:00", "19:00", "21:00", "23:00"] #international
+session_times = ["09:00", "11:00", "13:50", "15:00", "17:00", "19:00", "21:00", "23:00"] #international
 channels_to_post = ["@HowToDownIoadLink"] 
 round_intervals = 60  
 def edit_image(multiplier, winnings):
@@ -160,9 +160,9 @@ async def run_session():
 async def schedule_sessions():
     while True:
         now = datetime.now().strftime("%H:%M")
-        #print(f"Current Time: {now}") 
+        print(f"Current Time: {now}") 
         if now in session_times:
-          #  print(f"Starting session at {now}")  
+        print(f"Starting session at {now}")  
             await run_session()
         await asyncio.sleep(10)
 
@@ -175,7 +175,7 @@ async def start(client, message):
         
 async def start_bot():
     await bot.start()
-    asyncio.create_task(run_session()) 
+    asyncio.create_task(schedule_sessions()) 
     await idle()  
 
 if __name__ == "__main__":
