@@ -47,7 +47,7 @@ def edit_final_summary_image(total_winnings, round_results):
 
     # Positioning coordinates
     summary_pos = (80, 80)  
-    final_profits_pos = (50, 200)
+    final_profits_pos = (30, 220)
     rounds_start_pos = 80  
     round_spacing = 25  
 
@@ -61,7 +61,7 @@ def edit_final_summary_image(total_winnings, round_results):
     # Display the round results
     for i, result in enumerate(round_results):
         round_text = result  # Display the actual round result text
-        draw.text((80, rounds_start_pos + i * round_spacing), round_text, font=smaller_font, fill="white")
+        draw.text((100, rounds_start_pos + i * round_spacing), round_text, font=smaller_font, fill="white")
 
    
     final_message_text = "FINAL PROFITS FROM THIS SESSION"
