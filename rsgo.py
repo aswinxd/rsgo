@@ -81,8 +81,8 @@ async def run_session():
             multiplier = generate_round_result()
             winnings = calculate_winnings(bet_amount, multiplier)
             total_winnings[channel] += winnings
-            round_results[channel].append(f"Bet: {multiplier}x ")
-            await bot.send_message(channel, f" Bet: **{multiplier}x**")
+            round_results[channel].append(f"Bet: {multiplier}x")
+            await bot.send_message(channel, f"bet: {multiplier}x")
             await asyncio.sleep(30)
             edited_image = edit_image(multiplier, winnings)
             caption = f"Round {round_num} \nMultiplier: **{multiplier}x**\nWinnings: ₹{winnings}"
