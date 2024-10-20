@@ -39,38 +39,42 @@ def calculate_winnings(bet, multiplier):
 from PIL import Image, ImageDraw, ImageFont
  
 def edit_final_summary_image(total_winnings, round_results):
-    img_path = 'summary.jpg'  # Base image for the summary
+    img_path = 'summary.jpg'  # Path to the summary image
     img = Image.open(img_path)
     draw = ImageDraw.Draw(img)
     font = ImageFont.truetype("font.ttf", 40)
     smaller_font = ImageFont.truetype("font.ttf", 30)
 
-    # Positioning coordinates
-    summary_pos = (80, 80)  
-    final_profits_pos = (30, 320)
-    rounds_start_pos = 80  
-    round_spacing = 25  
+    # Positions for text and rectangles
+    summary_pos = (50, 50)  
+    final_profits_pos = (50, 500)
+    rounds_start_pos = 150  
+    round_spacing = 50  
 
-    # Title of the image
+    # Draw the title
     draw.text((50, 10), "Aviator Signal Reports", font=font, fill="white")
 
-    # Total winnings
-    total_winnings_text = f"Total Profits: ₹{total_winnings}"
-    draw.text(final_profits_pos, total_winnings_text, font=font, fill="white")
+    # Total winnings text with a rectangle around it
+    total_winnings_text = f"₹{total_winnings}"
+    total_winnings_box = draw.textbbox((200, 50), total_winnings_text, font=font)
+    draw.rounded_rectangle(total_winnings_box, outline="green", width=5, radius=15)  # Green rectangle
+    draw.text((200, 50), total_winnings_text, font=font, fill="white")
 
-    # Display the round results
+    # Draw the round results with rectangles around each multiplier
     for i, result in enumerate(round_results):
-        round_text = result  # Display the actual round result text
-        draw.text((100, rounds_start_pos + i * round_spacing), round_text, font=smaller_font, fill="white")
+        round_text = f"{result}"
+        round_pos = (200 + i * 200, rounds_start_pos)  # Spread horizontally
+        round_box = draw.textbbox(round_pos, round_text, font=smaller_font)
+        draw.rounded_rectangle(round_box, outline="green", width=5, radius=15)  # Rectangle around the multiplier
+        draw.text(round_pos, round_text, font=smaller_font, fill="white")
 
-   
-    final_message_text = f"FINAL PROFITS FROM THIS SESSION ₹{total_winnings}"
-    draw.text((20, 350), final_message_text, font=font, fill="white")
-    timestamp = int(time.time())  
-    edit_image_path = f"summary_edited.jpg"
+    # Final message text
+    final_message_text = "FINAL PROFITS FROM THIS SESSION"
+    draw.text((50, 650), final_message_text, font=font, fill="white")
 
+    # Save the edited image
+    edited_image_path = f"summary_edit.jpg"
     img.save(edit_image_path)
-    
     return edit_image_path
 
 
