@@ -89,7 +89,12 @@ async def run_session():
             await asyncio.sleep(30)
             edited_image = edit_image(multiplier, winnings)
             caption = f"Round {round_num} \nMultiplier: **{multiplier}x**\nWinnings: ₹{winnings}"
-            markup = InlineKeyboardMarkup([[InlineKeyboardButton(" Check Stats", url="https://rsgo.win/#/register?invite_code=EQK7L5A")]])
+            #markup = InlineKeyboardMarkup([[InlineKeyboardButton(" Check Stats", url="https://rsgo.win/#/register?invite_code=EQK7L5A")]])
+            markup = InlineKeyboardMarkup([
+                [InlineKeyboardButton(" Check Stats", url="https://rsgo.win/#/register?invite_code=EQK7L5A")],
+                [InlineKeyboardButton(" contact me ", url="https://t.me/RSGOOfficialbot")],
+                [InlineKeyboardButton(" tutorial", url="t.me/guydfgas6tfrefgds6fdsgvd6tds6ds6vdgsuygdvgd")]
+            ])
             await bot.send_photo(channel, edited_image, caption=caption, reply_markup=markup)
             await asyncio.sleep(round_intervals)
 
