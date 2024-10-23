@@ -280,7 +280,7 @@ async def back_to_menu(client, callback_query):
 @bot.on_message(filters.command("start"))
 async def start(client, message):
     if message.chat.type == "private":
-        await message.reply("/send command")
+        await message.reply("use /send command")
     else:
         await message.reply("Welcome.")
         
