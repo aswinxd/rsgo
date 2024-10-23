@@ -6,6 +6,9 @@ from pyrogram.errors import PeerIdInvalid
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from PIL import Image, ImageDraw, ImageFont
 import time
+from pyrogram import Client, filters
+from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+import asyncio
 #MDB =
 API_ID = "7980140"  
 API_HASH = "db84e318c6894f560a4087c20c33ce0a"  
@@ -207,16 +210,19 @@ async def add_button(client, callback_query):
         [InlineKeyboardButton("↩️ Back to Menu", callback_data="back_to_menu")]
     ])
     await callback_query.message.edit_text("Please send the button text and URL in this format:\n`Text - URL`", reply_markup=markup)
-
 @bot.on_callback_query(filters.regex("schedule_post"))
 async def schedule_post(client, callback_query):
     chat_id = callback_query.message.chat.id
-    post_data[chat_id]["step"] = "set_interval" 
+    post_data[chat_id]["step"] = "set_interval"
+    
+    markup = InlineKeyboardMarkup([
         [InlineKeyboardButton("↩️ Back to Menu", callback_data="back_to_menu")]
     ])
-    await callback_query.message.edit_text("Please provide the interval in minutes (e.g., `30` for 30 minutes).", reply_markup=markup)
-
-
+    
+    await callback_query.message.edit_text(
+        "Please provide the interval in minutes (e.g., `30` for 30 minutes).", 
+        reply_markup=markup
+    )
 @bot.on_callback_query(filters.regex("preview_post"))
 async def preview_post(client, callback_query):
     chat_id = callback_query.message.chat.id
