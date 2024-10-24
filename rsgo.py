@@ -91,7 +91,7 @@ async def run_session():
             caption = f"Round {round_num} \nMultiplier: **{multiplier}x**\nWinnings: ₹{winnings}"
             #markup = InlineKeyboardMarkup([[InlineKeyboardButton(" Check Stats", url="https://rsgo.win/#/register?invite_code=EQK7L5A")]])
             markup = InlineKeyboardMarkup([
-                [InlineKeyboardButton("Register", url="https://rsgo.win/#/register?invite_code=EQK7L5A")],
+                [InlineKeyboardButton(" Register", url="https://rsgo.win/#/register?invite_code=EQK7L5A")],
                 [InlineKeyboardButton(" contact me ", url="https://t.me/RSGOOfficialbot")],
                 [InlineKeyboardButton(" Tutorial", url="https://t.me/+zzGAPki3a4M2MGE9")]
             ])
