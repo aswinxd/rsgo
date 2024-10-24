@@ -79,13 +79,13 @@ async def run_session():
         await bot.send_message(channel, "✅ **Session starting round 1 soon**")
         await asyncio.sleep(15)
         for round_num in range(1, 6):
-            await bot.send_message(channel, f" **Hold up! Starting round {round_num}...**")
+            await bot.send_message(channel, f" **🚀 Hold up! Starting round {round_num}...**")
             await asyncio.sleep(15)
             multiplier = generate_round_result()
             winnings = calculate_winnings(bet_amount, multiplier)
             total_winnings[channel] += winnings
             round_results[channel].append(f"{multiplier}x")
-            await bot.send_message(channel, f"bet: {multiplier}x")
+            await bot.send_message(channel, f"🚀 bet: {multiplier}x")
             await asyncio.sleep(30)
             edited_image = edit_image(multiplier, winnings)
             caption = f"Round {round_num} \nMultiplier: **{multiplier}x**\nWinnings: ₹{winnings}"
@@ -93,7 +93,7 @@ async def run_session():
             markup = InlineKeyboardMarkup([
                 [InlineKeyboardButton("Register", url="https://rsgo.win/#/register?invite_code=EQK7L5A")],
                 [InlineKeyboardButton(" contact me ", url="https://t.me/RSGOOfficialbot")],
-                [InlineKeyboardButton(" tutorial", url="t.me/guydfgas6tfrefgds6fdsgvd6tds6ds6vdgsuygdvgd")]
+                [InlineKeyboardButton(" Tutorial", url="https://t.me/+zzGAPki3a4M2MGE9")]
             ])
             await bot.send_photo(channel, edited_image, caption=caption, reply_markup=markup)
             await asyncio.sleep(round_intervals)
